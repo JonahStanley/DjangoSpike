@@ -19,5 +19,5 @@ urlpatterns = patterns('',
     url(r'^edit-profile/{0,1}$', edit_profile),
     url(r'^()$', login),
     url(r'^accounts/log((?:in)|(?:out))/{0,1}$', login),
-    url(r'^(?:forum)|(?:thread))/{0,1}$', thread),
+    url(r'^(?:forum)|(?:thread)/{0,1}$', thread),
 )
