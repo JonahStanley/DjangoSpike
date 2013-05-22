@@ -1,9 +1,11 @@
 # Create your views here.
+import datetime
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.contrib import auth
+from Thread.models import Post
 
 
 def login(request, in_or_out):
@@ -28,5 +30,8 @@ def edit_profile(request):
 
 
 def thread(request):
+    if request.POST:
+        p = Post(userid=request.POST.userid, text=request.POST.text, time=datetime.datetime.now)
+        p.save()
     posts = 1
     return render_to_response('thread.html', {'posts': posts}, context_instance=RequestContext(request))
