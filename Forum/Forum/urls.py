@@ -20,7 +20,4 @@ urlpatterns = patterns('',
  	url(r'^edit-profile/$', edit_profile),
  	url(r'^()$', login),
  	url(r'^accounts/log((?:in)|(?:out))/$', login),
- 	#url(r'^edit-profile/$', edit_profile),
- 	#url(r'^$', login),
- 	#url(r'^accounts/log(?in)|(?out)/$', login),
 )
