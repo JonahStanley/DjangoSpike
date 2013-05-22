@@ -18,6 +18,6 @@ urlpatterns = patterns('',
     url(r'^register/{0,1}$', register),
     url(r'^edit-profile/{0,1}$', edit_profile),
     url(r'^()$', login),
-    url(r'^accounts/log((?:in)|(?:out))/{0,1}$', login),
+    url(r'^log((?:in)|(?:out))/{0,1}$', login),
     url(r'^(?:forum)|(?:thread)/{0,1}$', thread),
 )
