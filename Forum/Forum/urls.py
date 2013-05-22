@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, include, url
-from Thread.views import login, register, edit_profile, hello
+from Thread.views import login, register, edit_profile
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
@@ -15,7 +15,6 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     # url(r'^admin/', include(admin.site.urls)),
- 	url(r'^hello/$', hello),
  	url(r'^register/$', register),
  	url(r'^edit-profile/{0,1}$', edit_profile),
  	url(r'^()$', login),
