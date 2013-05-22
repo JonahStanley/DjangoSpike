@@ -17,7 +17,7 @@ urlpatterns = patterns('',
     # url(r'^admin/', include(admin.site.urls)),
  	url(r'^hello/$', hello),
  	url(r'^register/$', register),
- 	url(r'^edit-profile/$', edit_profile),
+ 	url(r'^edit-profile/{0,1}$', edit_profile),
  	url(r'^()$', login),
  	url(r'^accounts/log((?:in)|(?:out))/$', login),
 )

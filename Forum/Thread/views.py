@@ -1,5 +1,7 @@
 # Create your views here.
 from django.http import HttpResponse
+from django.shortcuts import render, render_to_response
+from django.template import RequestContext
 
 
 def hello(request):
@@ -7,7 +9,7 @@ def hello(request):
 
 
 def login(request, in_or_out):
-    return HttpResponse("TESTING")
+    return render_to_response('login.html', {'in_or_out': in_or_out}, context_instance=RequestContext(request))
 
 
 def register(request):
