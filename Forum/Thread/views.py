@@ -33,5 +33,5 @@ def thread(request):
     if request.POST:
         p = Post(userid=request.POST.userid, text=request.POST.text, time=datetime.datetime.now)
         p.save()
-    posts = 1
+    posts = Post.objects.order_by('time')
     return render_to_response('thread.html', {'posts': posts}, context_instance=RequestContext(request))
