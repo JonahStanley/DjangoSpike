@@ -4,6 +4,7 @@ from django.db import models
 class Post(models.Model):
 	userid = models.IntegerField()
 	text = models.TextField()
+	time = models.DateTimeField(auto_now_add = True)
 
 
 # class User(models.Model):

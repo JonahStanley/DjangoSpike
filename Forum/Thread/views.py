@@ -16,3 +16,6 @@ def register(request):
 
 def edit_profile(request):
     return HttpResponse("TESTING3")
+
+def thread(request):
+    return HttpResponse("Thread")
