@@ -28,4 +28,5 @@ def edit_profile(request):
 
 
 def thread(request):
-    return HttpResponse("Thread")
+    posts = 1
+    return render_to_response('thread.html', {'posts': posts}, context_instance=RequestContext(request))
