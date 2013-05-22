@@ -2,7 +2,8 @@
     <p class="error">Sorry, that's not a valid username or password</p>
   {% endif %}
 
-  <form action="edit-profile/" method="post">
+  <p>Welcome to the super secret forum</p>
+  <form action="" method="post">
     {% csrf_token %}
     <label for="username">User name:</label>
     <input type="text" name="username" value="" id="username">
@@ -10,3 +11,7 @@
     <input type="password" name="password" value="" id="password">
     <input type="submit" value="login" />
   </form>
+
+<form action="register">
+    <input type="submit" value="Register Here">
+</form>
