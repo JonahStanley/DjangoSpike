@@ -5,9 +5,10 @@
         {% for p in posts %}
             <b>{{p.userid}}</b> wrote:
             <p>{{p.text}}</p>
-            <form name="delete" action="/delete/" method="post">
+            <form name="delete" action="/forum/" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="del_id" value={{p.id}}>
+                <input type="hidden" name="todo" value="del">
                 <input type="submit" value="delete">
             </form>
             <hr>
@@ -18,6 +19,7 @@
         <form name="post" action="/thread/" method="post"> 
             {% csrf_token %}
             {{ form.as_p }}
+            <input type="hidden" name="todo" value="add">
             <input type="submit">
         </form><br>
     </body>
