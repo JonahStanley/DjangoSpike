@@ -3,6 +3,7 @@
 <head><title>Forum</title>
     <body>
         <form action="/logout/" method="post">
+            {% csrf_token %}
             <input type="submit" value="logout">
         </form>
         {% for p in posts %}

@@ -2,10 +2,9 @@
 <html lang="en">
 <head><title>Register</title>
     <body>
-        <form name="register" action="/login/" method="post">
+        <form name="register" action="/register/" method="post">
             {% csrf_token %}
             {{ form.as_p }}
-            <input type="hidden" name="registered" value="true">
             <input type="submit" value="register">
         </form>
     </body>

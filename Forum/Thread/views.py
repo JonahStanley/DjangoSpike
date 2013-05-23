@@ -11,30 +11,29 @@ from django.contrib.auth.models import User
 
 def login(request, in_or_out):
     out = True if "out" in in_or_out else False
-    reg = False
+    reg = request.GET.get('reg', False)
     valid = True
-    if request.POST:
-        if "true" in request.POST.get('registered'):
-            user = User.objects.create_user(username=request.POST.get('username'), password=request.POST.get('password'), email=request.POST.get('email'))
-            user.firstname = request.POST.get('first_name')
-            user.lastname = request.POST.get('last_name'),
-            user.save()
-            reg = True
+    if request.POST and not out:
+        username = request.POST.get('username', '')
+        password = request.POST.get('password', '')
+        user = auth.authenticate(username=username, password=password)
+        if user is not None and user.is_active:
+            auth.login(request, user)
+            return HttpResponseRedirect("/forum/")
         else:
-            username = request.POST.get('username', '')
-            password = request.POST.get('password', '')
-            user = auth.authenticate(username=username, password=password)
-            if user is not None and user.is_active:
-                auth.login(request, user)
-                return HttpResponseRedirect("/forum/")
-            else:
-                valid = False
+            valid = False
     if "out" in in_or_out:
             auth.logout(request)
     return render_to_response('login.html', {'in_or_out': out, 'reg': reg, 'valid': valid}, context_instance=RequestContext(request))
 
 
 def register(request):
+    if request.POST:
+        user = User.objects.create_user(username=request.POST.get('username'), password=request.POST.get('password'), email=request.POST.get('email'))
+        user.firstname = request.POST.get('first_name')
+        user.lastname = request.POST.get('last_name'),
+        user.save()
+        return HttpResponseRedirect("/login/?reg=1")
     form = register_form()
     return render_to_response('register.html', {'form': form}, context_instance=RequestContext(request))
 
