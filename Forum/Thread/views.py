@@ -37,3 +37,12 @@ def thread(request):
     posts = Post.objects.order_by('time')
     form = submit_post()
     return render_to_response('thread.html', {'posts': posts,'form':form}, context_instance=RequestContext(request))
+
+def delete(request):
+    #assuming the imput is correct (BAD)
+    id_to_delete = request.POST['del_id']
+    post_to_delete = Post.objects.get(id=id_to_delete)
+    post_to_delete.delete()
+
+    #redirect back to thread
+    return HttpResponseRedirect("/forum/")

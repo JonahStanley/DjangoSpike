@@ -1,0 +1,24 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+<head><title>Forum</title>
+    <body>
+        {% for p in posts %}
+            <b>{{p.userid}}</b> wrote:
+            <p>{{p.text}}</p>
+            <form name="delete" action="/delete/" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="del_id" value={{p.id}}>
+                <input type="submit" value="delete">
+            </form>
+            <hr>
+        {% empty %}
+            <h4>Nobody has written anything yet!</h4>
+        {% endfor %}
+        
+        <form name="post" action="/thread/" method="post"> 
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit">
+        </form><br>
+    </body>
+</html>
