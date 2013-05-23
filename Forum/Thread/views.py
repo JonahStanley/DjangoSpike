@@ -6,6 +6,7 @@ from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.contrib import auth
 from Thread.models import Post
+from forms import submit_post
 
 
 def login(request, in_or_out):
@@ -31,7 +32,8 @@ def edit_profile(request):
 
 def thread(request):
     if request.POST:
-        p = Post(userid=request.POST.userid, text=request.POST.text, time=datetime.datetime.now)
+        p = Post(userid=request.POST['userid'], text=request.POST['text'], time=datetime.datetime.now)
         p.save()
     posts = Post.objects.order_by('time')
-    return render_to_response('thread.html', {'posts': posts}, context_instance=RequestContext(request))
+    form = submit_post()
+    return render_to_response('thread.html', {'posts': posts,'form':form}, context_instance=RequestContext(request))
