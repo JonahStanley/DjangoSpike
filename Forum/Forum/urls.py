@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, include, url
 from Thread.views import login, register, edit_profile, thread
 from django.contrib import admin
+admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:

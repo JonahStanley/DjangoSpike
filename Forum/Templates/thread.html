@@ -5,7 +5,7 @@
         {% for p in posts %}
             <b>{{p.userid}}</b> wrote:
             <p>{{p.text}}</p>
-            <form name="delete" action="/forum/" method="post">
+            <form name="delete" action="" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="del_id" value={{p.id}}>
                 <input type="hidden" name="todo" value="del">
@@ -16,7 +16,7 @@
             <h4>Nobody has written anything yet!</h4>
         {% endfor %}
         
-        <form name="post" action="/thread/" method="post"> 
+        <form name="post" action="" method="post"> 
             {% csrf_token %}
             {{ form.as_p }}
             <input type="hidden" name="todo" value="add">
