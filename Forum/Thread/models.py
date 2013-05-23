@@ -6,15 +6,15 @@ from django.core.validators import *
 # Create your models here.
 class Post(models.Model):
     userid = models.IntegerField()
-    text = models.CharField(max_length=5)
+    text = models.CharField(max_length=10)
     time = models.DateTimeField(auto_now_add=True)
 
-    def save(self):
+    def save(self, *args, **kwargs):
         try:
             self.clean_fields()
-            super(submit_post, self).sav()
+            super(Post, self).save()
         except:
-            raise ValueError('text too long!!!')
+            raise ValueError()
 
 # class User(models.Model):
 #      username = models.CharField(max_length = 30, unique = True)
