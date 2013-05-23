@@ -47,7 +47,7 @@ def edit_profile(request):
 def thread(request):
     if request.POST:
         if request.POST['todo'] == 'add':
-            Post.objects.create(userid=request.POST['userid'], text=request.POST['text'])
+            Post.objects.create(username=request.user.username, text=request.POST['text'])
         elif request.POST['todo'] == 'del':
             id_to_delete = request.POST['del_id']
             post_to_delete = Post.objects.get(id=id_to_delete)

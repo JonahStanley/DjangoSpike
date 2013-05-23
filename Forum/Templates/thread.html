@@ -7,7 +7,7 @@
             <input type="submit" value="logout">
         </form>
         {% for p in posts %}
-            <b>{{p.userid}}</b> wrote at <b>{{p.time}}</b>:
+            <b>{{p.username}}</b> wrote at <b>{{p.time}}</b>:
             <p>{{p.text}}</p>
             <form name="delete" action="" method="post">
                 {% csrf_token %}

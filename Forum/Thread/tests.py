@@ -18,7 +18,7 @@ class ModelTest(TestCase):
     def test_post_length(self):
         #from pdb import set_trace; set_trace()
         try:
-            Post.objects.create(userid=1, text="BLBLBLBLBLBLBLBLBLBLBLBLB")
+            Post.objects.create(userid=1, text="This is a test of the emergency long post system.  Please stand by as this sentence becomes increasingly larger so that an error gets thrown.  AHHAHAHAHAHHAHAHAHAHAHHA :P")
         except ValueError:
             pass
         else:
