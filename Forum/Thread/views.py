@@ -5,7 +5,7 @@ from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.contrib import auth
 from Thread.models import Post
-from forms import submit_post
+from forms import *
 from django.contrib.auth.models import User
 
 
@@ -14,7 +14,13 @@ def login(request, in_or_out):
     reg = False
     valid = True
     if request.POST:
-        if "false" in request.POST.get('registered'):
+        if "true" in request.POST.get('registered'):
+            user = User.objects.create_user(username=request.POST.get('username'), password=request.POST.get('password'), email=request.POST.get('email'))
+            user.firstname = request.POST.get('first_name')
+            user.lastname = request.POST.get('last_name'),
+            user.save()
+            reg = True
+        else:
             username = request.POST.get('username', '')
             password = request.POST.get('password', '')
             user = auth.authenticate(username=username, password=password)
@@ -23,17 +29,14 @@ def login(request, in_or_out):
                 return HttpResponseRedirect("/forum/")
             else:
                 valid = False
-        if "true" in request.POST.get('registered'):
-            user = User.objects.create_user(username=request.POST.get('username'), password=request.POST.get('password'), firstname=request.POST.get('firstname'), lastname=request.POST.get('lastname'))
-            user.save()
-            reg = True
     if "out" in in_or_out:
             auth.logout(request)
     return render_to_response('login.html', {'in_or_out': out, 'reg': reg, 'valid': valid}, context_instance=RequestContext(request))
 
 
 def register(request):
-    return render_to_response('register.html', context_instance=RequestContext(request))
+    form = register_form()
+    return render_to_response('register.html', {'form': form}, context_instance=RequestContext(request))
 
 
 @login_required
