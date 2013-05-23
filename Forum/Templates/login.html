@@ -3,9 +3,22 @@
   {% endif %}
 
   <p>Welcome to the super secret forum</p>
-  <form action="" method="post">
+  {% if in_or_out %}
+  <p><b>logged out sucessfuly</b><p>
+  {% endif %}
+  
+  {% if reg %}
+  <p><b>REGISTERED</b><p>
+  {% endif %}
+
+  {% if not valid %}
+  <p><b>INVALID USERNAME OR PASSWORD</b><p>
+  {% endif %}
+
+  <form action="/login/" method="post">
     {% csrf_token %}
     <label for="username">User name:</label>
+    <input type="hidden" name="registered" value="" id="false">
     <input type="text" name="username" value="" id="username">
     <label for="password">Password:</label>
     <input type="password" name="password" value="" id="password">
