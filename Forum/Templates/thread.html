@@ -2,6 +2,9 @@
 <html lang="en">
 <head><title>Forum</title>
     <body>
+        <form action="/logout/" method="post">
+            <input type="submit" value="logout">
+        </form>
         {% for p in posts %}
             <b>{{p.userid}}</b> wrote at <b>{{p.time}}</b>:
             <p>{{p.text}}</p>
@@ -20,7 +23,7 @@
             {% csrf_token %}
             {{ form.as_p }}
             <input type="hidden" name="todo" value="add">
-            <input type="submit">
+            <input type="submit" value="post">
         </form><br>
     </body>
 </html>
