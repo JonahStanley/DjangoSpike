@@ -34,6 +34,7 @@ def thread(request):
     if request.POST:
         if request.POST['todo'] == 'add':
             p = Post(userid=request.POST['userid'], text=request.POST['text'])
+            # p.clean_fields()
             p.save()
         elif request.POST['todo'] == 'del':
             id_to_delete = request.POST['del_id']
