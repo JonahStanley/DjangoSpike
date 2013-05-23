@@ -3,7 +3,7 @@
 <head><title>Forum</title>
     <body>
         {% for p in posts %}
-            <b>{{p.userid}}</b> wrote:
+            <b>{{p.userid}}</b> wrote at <b>{{p.time}}</b>:
             <p>{{p.text}}</p>
             <form name="delete" action="" method="post">
                 {% csrf_token %}
