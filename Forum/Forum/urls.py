@@ -1,10 +1,10 @@
 from django.conf.urls import patterns, include, url
 from Thread.views import login, register, edit_profile, thread
+from django.contrib import admin
 
 # Uncomment the next two lines to enable the admin:
-# from django.contrib import admin
-# admin.autodiscover()
-
+from django.contrib import admin
+admin.autodiscover()
 urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'Forum.views.home', name='home'),
@@ -14,7 +14,7 @@ urlpatterns = patterns('',
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     # Uncomment the next line to enable the admin:
-    # url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', include(admin.site.urls)),
     url(r'^register/{0,1}$', register),
     url(r'^edit-profile/{0,1}$', edit_profile),
     url(r'^()$', login),
