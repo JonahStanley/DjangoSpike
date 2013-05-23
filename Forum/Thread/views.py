@@ -40,5 +40,5 @@ def thread(request):
             post_to_delete.delete()
     posts = Post.objects.order_by('time')
     form = submit_post()
-    return render_to_response('thread.html', {'posts': posts, 'form': form}, context_instance=RequestContext(request))
+    return render_to_response('thread.html', {'posts': posts, 'form': form, 'user': request.user}, context_instance=RequestContext(request))
     return HttpResponseRedirect("/forum/")
