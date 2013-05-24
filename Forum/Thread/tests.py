@@ -8,6 +8,8 @@ from django.test import TestCase
 from Thread.models import Post
 from django.test.client import Client
 from django.contrib.auth.models import User
+from django.test import LiveServerTestCase
+from selenium.webdriver.firefox.webdriver import WebDriver
 
 
 class ModelTest(TestCase):
@@ -441,3 +443,26 @@ class EditPostTest(TestCase):
         #assert that edit didn't happen and that error was added to post data
         self.assertEqual(post.text, text0)
         self.assertEqual(response.content, 'error')
+
+
+class SeleniumTests(LiveServerTestCase):
+    fixtures = ['user-data.json']
+
+    @classmethod
+    def setUpClass(cls):
+        cls.selenium = WebDriver()
+        super(SeleniumTests, cls).setUpClass()
+        User.objects.create_user(username='test', password='test')
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.selenium.quit()
+        super(SeleniumTests, cls).tearDownClass()
+
+    def test_login(self):
+        self.selenium.get('%s%s' % (self.live_server_url, '/login/'))
+        username_input = self.selenium.find_element_by_name("username")
+        username_input.send_keys('test')
+        password_input = self.selenium.find_element_by_name("password")
+        password_input.send_keys('test')
+        self.selenium.find_element_by_xpath('//input[@value="login"]').click()
