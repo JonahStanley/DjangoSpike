@@ -82,12 +82,10 @@ class IntegrationTest(TestCase):
             self.fail("Anon sees post option")
 
         #make sure anon can't actually post
-        try:
-            response = c.post("/forum/", {'username': 'anon', 'text': "hi", 'todo': 'add'})
-        except:
+        if not response.context['posts']:
             pass
         else:
-            self.fail('annon user posted!')
+            self.fail("ANON POSTED")
 
     def test_two_posts(self):
         c = Client()
