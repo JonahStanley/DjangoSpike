@@ -9,12 +9,16 @@
         {% for p in posts %}
             <b>{{p.username}}</b> wrote at <b>{{p.time}}</b>:
             <p>{{p.text}}</p>
+
+            {# let users only delete their own post #}
+            {% ifequal user.username p.username %}
             <form name="delete" action="" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="del_id" value={{p.id}}>
                 <input type="hidden" name="todo" value="del">
                 <input type="submit" value="delete">
             </form>
+            {% endifequal %}
             <hr>
         {% empty %}
             <h4>Nobody has written anything yet!</h4>
