@@ -1,0 +1,3 @@
+Please note that this assumes an empty forum with only a superuser named "super" with pass "super"
+
+ALL TESTS WILL LEAVE FORUM UNTOUCHED AT THE END.  IF YOU STOP ANY TEST, YOU MUST UNDO WHAT WAS DONE OR TEST WILL CONTINUE TO FAIL

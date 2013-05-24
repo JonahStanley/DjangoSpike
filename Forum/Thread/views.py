@@ -55,7 +55,12 @@ def edit_profile(request):
     curUser = request.user.username
     if request.POST:
         username = request.POST.get('username')
-        if request.POST.get('oldpassword') == '':
+        if request.POST.get('delete') == 'delete':
+            olduser = User.objects.get(username=request.user.username)
+            auth.logout(request)
+            olduser.delete()
+            return HttpResponseRedirect("/login/")
+        elif request.POST.get('oldpassword') == '':
             authenticated = False
         elif auth.authenticate(username=curUser, password=request.POST.get('oldpassword')) is None:
             authenticated = False
