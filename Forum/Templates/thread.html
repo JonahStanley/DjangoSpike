@@ -56,6 +56,8 @@ function cancel(){
                 <button>Edit Profile</button>
         </a>
         {% endif %}
+        <br>
+        <hr>
         {% for p in posts %}
             <b>{{p.username}}</b> wrote at <b>{{p.time}}</b>:
             <p id={{p.id}}>{{p.text}}</p>
