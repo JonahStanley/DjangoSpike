@@ -8,7 +8,6 @@ from django.test import TestCase
 from Thread.models import Post
 from django.test.client import Client
 from django.contrib.auth.models import User
-from django.http import HttpResponsePermanentRedirect
 
 
 class ModelTest(TestCase):
@@ -32,7 +31,7 @@ class IntegrationTest(TestCase):
         c = Client()
 
         #register new user and log in
-        u = User.objects.create_user(username='test',password='test')
+        User.objects.create_user(username='test', password='test')
         c.login(username='test', password='test')
 
         response = c.get("/forum/")
@@ -50,7 +49,7 @@ class IntegrationTest(TestCase):
         c = Client()
 
         #register new user and log in
-        u = User.objects.create_user(username='test',password='test')
+        User.objects.create_user(username='test', password='test')
         c.login(username='test', password='test')
 
         response = c.post("/forum/", {'username': 'test', 'text': "hi", 'todo': 'add'})
@@ -89,7 +88,6 @@ class IntegrationTest(TestCase):
             pass
         else:
             self.fail('annon user posted!')
-
 
     def test_two_posts(self):
         c = Client()
