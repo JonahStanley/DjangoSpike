@@ -195,6 +195,12 @@ class LoginPageTest(TestCase):
         else:
             self.fail("not logged out")
 
+    def test_login_redirection(self):
+        c = Client()
+        User.objects.create_user(username='test', password='test')
+        r = c.post("/login/?next=/edit-profile", {'username': 'test', 'password': 'test'})
+        self.assertRedirects(r, '/edit-profile', status_code=302)
+
 
 class EditProfileTest(TestCase):
     def test_field_fill(self):

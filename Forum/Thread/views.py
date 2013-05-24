@@ -16,7 +16,6 @@ def login(request, in_or_out):
         out = False
     reg = request.GET.get('reg', False)
     next = request.GET.get(u'next', '/forum/')
-    print next
     valid = True
     if request.POST and not out and not ignore:
         username = request.POST.get('username', '')
