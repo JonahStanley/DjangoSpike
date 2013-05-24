@@ -11,9 +11,12 @@ from django.contrib.auth.models import User
 
 def login(request, in_or_out):
     out = True if "out" in in_or_out else False
+    ignore = (request.POST.get('todo') == 'redirect')
+    if ignore:
+        out = False
     reg = request.GET.get('reg', False)
     valid = True
-    if request.POST and not out:
+    if request.POST and not out and not ignore:
         username = request.POST.get('username', '')
         password = request.POST.get('password', '')
         user = auth.authenticate(username=username, password=password)
@@ -22,7 +25,7 @@ def login(request, in_or_out):
             return HttpResponseRedirect("/forum/")
         else:
             valid = False
-    if "out" in in_or_out:
+    if "out" in in_or_out and not ignore:
             auth.logout(request)
     return render_to_response('login.html', {'in_or_out': out, 'reg': reg, 'valid': valid}, context_instance=RequestContext(request))
 
