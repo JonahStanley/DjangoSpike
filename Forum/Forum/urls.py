@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, include, url
-from Thread.views import login, register, edit_profile, thread
+from Thread.views import login, register, edit_profile, thread, edit_post
 from django.contrib import admin
 admin.autodiscover()
 
@@ -18,4 +18,5 @@ urlpatterns = patterns('',
     url(r'^()$', login),
     url(r'^(?:accounts/){0,1}log((?:in)|(?:out))/{0,1}$', login),
     url(r'^(?:forum)|(?:thread)/{0,1}$', thread),
+    url(r'^edit_post/$',edit_post),
 )

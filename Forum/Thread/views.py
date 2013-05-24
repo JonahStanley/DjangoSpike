@@ -61,3 +61,23 @@ def thread(request):
     posts = Post.objects.order_by('time')
     form = submit_post()
     return render_to_response('thread.html', {'posts': posts, 'form': form, 'user': request.user, 'anon': request.user.is_anonymous()}, context_instance=RequestContext(request))
+
+
+def edit_post(request):
+    if request.POST:
+        if not request.user.is_anonymous():
+            #get id of post to edit
+            edit_id = request.POST.get('edit_id', '')
+            new_text = request.POST.get('new_text', '')
+
+            try:
+                post = Post.objects.get(id=edit_id)
+            except:
+                raise IndexError("That post is non existant")
+
+            #check that user owns this post, if so update
+            if request.user.username == post.username:
+                post.text = new_text
+                post.save()
+
+    return HttpResponseRedirect("/forum/")

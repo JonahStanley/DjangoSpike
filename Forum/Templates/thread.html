@@ -1,6 +1,45 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <html lang="en">
 <head><title>Forum</title>
+<script>
+function edit(id){
+    //remove paragraph
+    post_to_edit = document.getElementById(id);
+    old_text = post_to_edit.innerHTML;
+    post_to_edit.innerHTML = '';
+
+    //make text area
+    textarea = document.getElementById('div'+id);
+    console.log(old_text);
+    textarea.innerHTML="<textarea form=\"form"+id+"\" name=new_text>"+old_text+"</textarea>";
+
+    //change where the form goes
+    form=document.getElementById('form'+id);
+    form.action="/edit_post/";
+
+    //update the vairable name to edit
+    id_name = document.getElementById('item'+id);
+    id_name.name = "edit_id";
+
+    //update todo
+    todo = document.getElementById('todo'+id);
+    todo.name = "edit_post"
+
+    //update submit
+    submit = document.getElementById('submit'+id)
+    submit.value = "Confirm"
+
+    //update script button
+    script_button = document.getElementById('script_button'+id);
+    script_button.innerHTML = "cancel";
+    script_button.onclick = function(){cancel();};
+}
+
+function cancel(){
+    location.reload()
+}
+</script>
+</head>
     <body>
         <form action="/logout/" method="post">
             {% csrf_token %}
@@ -8,15 +47,17 @@
         </form>
         {% for p in posts %}
             <b>{{p.username}}</b> wrote at <b>{{p.time}}</b>:
-            <p>{{p.text}}</p>
+            <p id={{p.id}}>{{p.text}}</p>
 
             {# let users only delete their own post #}
             {% ifequal user.username p.username %}
-            <form name="delete" action="" method="post">
+            <div id="div{{p.id}}"></div>
+            <form name="delete" action="" method="post" id="form{{p.id}}">
                 {% csrf_token %}
-                <input type="hidden" name="del_id" value={{p.id}}>
-                <input type="hidden" name="todo" value="del">
-                <input type="submit" value="delete">
+                <input type="hidden" name="del_id" value={{p.id}} id="item{{p.id}}">
+                <input type="hidden" name="todo" value="del" id="todo{{p.id}}">
+                <input type="submit" value="delete" id="submit{{p.id}}">
+                <button type="button" onclick="edit({{p.id}})" id="script_button{{p.id}}">Edit</button>
             </form>
             {% endifequal %}
             <hr>
