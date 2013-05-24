@@ -503,4 +503,22 @@ class SeleniumTests(LiveServerTestCase):
         self.selenium.find_element_by_xpath('//input[@value="register"]').click()
 
     def test_edit_page(self):
-        pass
+        self.selenium.get('%s%s' % (self.live_server_url, '/login/'))
+        username_input = self.selenium.find_element_by_name("username")
+        username_input.send_keys('test')
+        password_input = self.selenium.find_element_by_name("password")
+        password_input.send_keys('test')
+        self.selenium.find_element_by_xpath('//input[@value="login"]').click()
+        self.selenium.find_element_by_partial_link_text('Edit Profile').click()
+        username_input = self.selenium.find_element_by_name("username")
+        username_input.send_keys('test2')
+        password_input = self.selenium.find_element_by_name("oldpassword")
+        password_input.send_keys('test')
+        self.selenium.find_element_by_xpath('//input[@value="edit"]').click()
+        self.selenium.get('%s%s' % (self.live_server_url, '/login/'))
+        username_input = self.selenium.find_element_by_name("username")
+        username_input.send_keys('test2')
+        password_input = self.selenium.find_element_by_name("password")
+        password_input.send_keys('test')
+        self.selenium.find_element_by_xpath('//input[@value="login"]').click()
+        self.selenium.implicitly_wait(1000)
