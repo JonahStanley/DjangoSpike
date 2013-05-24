@@ -31,8 +31,9 @@ class IntegrationTest(TestCase):
         c = Client()
 
         #register new user and log in
-        c.post('/register/', {'username': 'test', 'password': 'test'})
+        u = User.objects.create_user(username='test',password='test')
         c.login(username='test', password='test')
+
         response = c.get("/forum/")
 
         if not response.context['posts']:
@@ -46,10 +47,10 @@ class IntegrationTest(TestCase):
 
     def test_one_post(self):
         c = Client()
+
         #register new user and log in
-        c.post('/register/', {'username': 'test', 'password': 'test'})
+        u = User.objects.create_user(username='test',password='test')
         c.login(username='test', password='test')
-        response = c.get("/forum/")
 
         response = c.post("/forum/", {'username': 'test', 'text': "hi", 'todo': 'add'})
         if not "Nobody has written anything yet!" in response.content:
@@ -61,6 +62,33 @@ class IntegrationTest(TestCase):
         else:
             self.fail("NOT Posted")
         self.assertEqual(response.context['posts'][0].username, 'test')
+
+    def test_register(self):
+        c = Client()
+
+        #register new user and log in
+        c.post('/register/', {'username': 'test', 'password': 'test'})
+        if c.login(username='test', password='test'):
+            pass
+        else:
+            self.fail("Didn't Create User")
+
+    def test_anonymous_user(self):
+        c = Client()
+        response = c.post("/forum")
+
+        #make sure anon doesn't see post
+        if "<form name=\"post\" action=\"\" method=\"post\">" in response:
+            self.fail("Anon sees post option")
+
+        #make sure anon can't actually post
+        try:
+            response = c.post("/forum/", {'username': 'anon', 'text': "hi", 'todo': 'add'})
+        except:
+            pass
+        else:
+            self.fail('annon user posted!')
+
 
     def test_two_posts(self):
         c = Client()
