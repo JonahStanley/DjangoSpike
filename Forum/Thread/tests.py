@@ -277,7 +277,7 @@ class EditProfileTest(TestCase):
         c = Client()
         User.objects.create_user(username='test', password='test')
         c.login(username='test', password='test')
-        for i in range(0, 1):
+        for i in range(0, 5):
             r = c.post("/edit-profile/", {'username': "test2", 'oldpassword': 'test', 'password': 'test', 'firstname': 'Jonah', 'lastname': '', 'email': ''})
             c.logout()
             c.login(username='test2', password='test')
