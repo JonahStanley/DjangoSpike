@@ -15,7 +15,7 @@ function edit(id){
 
     //change where the form goes
     form=document.getElementById('form'+id);
-    form.action="/edit_post/";
+    form.action="/edit-post/";
 
     //update the vairable name to edit
     id_name = document.getElementById('item'+id);
@@ -43,13 +43,22 @@ function cancel(){
     <body>
         <form action="/logout/" method="post">
             {% csrf_token %}
+            {% if user.is_anonymous %}
+            <input type="submit" value="login">
+            <input type="hidden" name="todo" value = "login">
+            {% else %}
             <input type="submit" value="logout">
+            <input type="hidden" name="todo" value = "logout">
+            <button type="button" href="/edit-profile/"><a href="/edit-profile">Edit Profile</a></button>
+            {% endif %}
         </form>
+
         {% for p in posts %}
             <b>{{p.username}}</b> wrote at <b>{{p.time}}</b>:
             <p id={{p.id}}>{{p.text}}</p>
 
             {# let users only delete their own post #}
+
             {% ifequal user.username p.username %}
             <div id="div{{p.id}}"></div>
             <form name="delete" action="" method="post" id="form{{p.id}}">
