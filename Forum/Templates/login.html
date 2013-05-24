@@ -6,7 +6,7 @@
   {% if in_or_out %}
   <p><b>logged out successfully</b><p>
   {% endif %}
-  
+
   {% if reg %}
   <p><b>REGISTERED</b><p>
   {% endif %}
@@ -15,7 +15,7 @@
   <p><b>INVALID USERNAME OR PASSWORD</b><p>
   {% endif %}
 
-  <form action="/login/" method="post">
+  <form action="/login/?next={{next}}" method="post">
     {% csrf_token %}
     <label for="username">User name:</label>
     <input type="text" name="username" value="" id="username">
