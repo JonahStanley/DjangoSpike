@@ -1,0 +1,32 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+<head><title>Edit Profile</title>
+    <body>
+        <p><b>PLEASE NOTE THAT YOU MUST FILL OUT PASSWORD</b></p>
+        {% if duplicate %}
+        <p><b>That username already exists</b></p>
+        {% endif %}
+        {% if edited %}
+        <p><b>PROFILE CHANGED</b></p>
+        {% endif %}
+        {% if not authenticated %}
+        <p><b>PASSWORDS DID NOT MATCH</b></p>
+        {% endif %}
+        <form name="register" action="/edit-profile/" method="post">
+            {% csrf_token %}
+            <label for="username">User name:</label>
+            <input type="text" name="username" value="{{user.username}}" id="username">
+            <label for="oldpassword">Old Password:</label>
+            <input type="password" name="oldpassword" value="" id="oldpassword">
+            <label for="password">New Password:</label>
+            <input type="password" name="password" value="" id="password">
+            <label for="firstname">Firstname:</label>
+            <input type="text" name="firstname" value="{{user.firstname}}" id="firstname">
+            <label for="lastname">Lastname:</label>
+            <input type="text" name="lastname" value="{{user.lastname}}" id="lastname">
+            <label for="email">Email:</label>
+            <input type="text" name="email" value="{{user.email}}" id="email">
+            <input type="submit" value="edit">
+        </form>
+    </body>
+</html>
