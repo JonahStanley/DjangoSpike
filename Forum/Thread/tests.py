@@ -446,7 +446,7 @@ class EditPostTest(TestCase):
 
 
 class SeleniumTests(LiveServerTestCase):
-    fixtures = ['user-data.json']
+    fixtures = ['data.json']
 
     @classmethod
     def setUpClass(cls):
@@ -466,3 +466,41 @@ class SeleniumTests(LiveServerTestCase):
         password_input = self.selenium.find_element_by_name("password")
         password_input.send_keys('test')
         self.selenium.find_element_by_xpath('//input[@value="login"]').click()
+
+    def test_false_login(self):
+        self.selenium.get('%s%s' % (self.live_server_url, '/login/'))
+        username_input = self.selenium.find_element_by_name("username")
+        username_input.send_keys('test1')
+        password_input = self.selenium.find_element_by_name("password")
+        password_input.send_keys('test')
+        self.selenium.find_element_by_xpath('//input[@value="login"]').click()
+        self.selenium.find_element_by_xpath('//input[@value="login"]')
+
+    def test_register(self):
+        self.selenium.get('%s%s' % (self.live_server_url, '/register/'))
+        username_input = self.selenium.find_element_by_name("username")
+        username_input.send_keys('test2')
+        password_input = self.selenium.find_element_by_name("password")
+        password_input.send_keys('test2')
+        self.selenium.find_element_by_xpath('//input[@value="register"]').click()
+        username_input = self.selenium.find_element_by_name("username")
+        username_input.send_keys('test2')
+        password_input = self.selenium.find_element_by_name("password")
+        password_input.send_keys('test2')
+        self.selenium.find_element_by_xpath('//input[@value="login"]').click()
+
+    def test_false_register(self):
+        self.selenium.get('%s%s' % (self.live_server_url, '/register/'))
+        username_input = self.selenium.find_element_by_name("username")
+        username_input.send_keys('test')
+        password_input = self.selenium.find_element_by_name("password")
+        password_input.send_keys('test')
+        self.selenium.find_element_by_xpath('//input[@value="register"]').click()
+        username_input = self.selenium.find_element_by_name("username")
+        username_input.send_keys('test2')
+        password_input = self.selenium.find_element_by_name("password")
+        password_input.send_keys('test2')
+        self.selenium.find_element_by_xpath('//input[@value="register"]').click()
+
+    def test_edit_page(self):
+        pass
