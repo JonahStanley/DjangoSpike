@@ -43,7 +43,6 @@ def edit_profile(request):
     return HttpResponse("TESTING3")
 
 
-@login_required
 def thread(request):
     if request.POST:
         if request.POST['todo'] == 'add':
@@ -54,4 +53,4 @@ def thread(request):
             post_to_delete.delete()
     posts = Post.objects.order_by('time')
     form = submit_post()
-    return render_to_response('thread.html', {'posts': posts, 'form': form, 'user': request.user}, context_instance=RequestContext(request))
+    return render_to_response('thread.html', {'posts': posts, 'form': form, 'user': request.user, 'anon': request.user.is_anonymous()}, context_instance=RequestContext(request))

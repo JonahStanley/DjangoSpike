@@ -19,12 +19,13 @@
         {% empty %}
             <h4>Nobody has written anything yet!</h4>
         {% endfor %}
-        
+        {% if not anon %}
         <form name="post" action="" method="post"> 
             {% csrf_token %}
             {{ form.as_p }}
             <input type="hidden" name="todo" value="add">
             <input type="submit" value="post">
         </form><br>
+        {% endif %}
     </body>
 </html>

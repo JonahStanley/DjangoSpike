@@ -63,8 +63,8 @@ class IntegrationTest(TestCase):
             pass
         else:
             self.fail("Second post not here")
-        self.assertEqual(response.context['posts'][0].userid, 1)
-        self.assertEqual(response.context['posts'][1].userid, 2)
+        self.assertEqual(response.context['posts'][0].username, 'AnonymousUser')
+        self.assertEqual(response.context['posts'][1].username, 'AnonymousUser')
 
     def test_remove_one_post(self):
         c = Client()
