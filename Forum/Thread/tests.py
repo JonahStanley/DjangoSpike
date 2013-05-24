@@ -420,4 +420,4 @@ class EditPostTest(TestCase):
 
         #assert that edit didn't happen and that error was added to post data
         self.assertEqual(post.text, text0)
-        self.assertEqual(response.content,'error')
+        self.assertEqual(response.content, 'error')
