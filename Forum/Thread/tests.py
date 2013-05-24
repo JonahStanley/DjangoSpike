@@ -7,6 +7,7 @@ Replace this with more appropriate tests for your application.
 from django.test import TestCase
 from Thread.models import Post
 from django.test.client import Client
+from django.contrib.auth.models import User
 
 
 class ModelTest(TestCase):
@@ -53,9 +54,12 @@ class IntegrationTest(TestCase):
 
     def test_two_posts(self):
         c = Client()
-        c.post("/forum/", {'userid': 1, 'text': "hi", 'todo': 'add'})
-        response = c.post("/forum/", {'userid': 2, 'text': "goodbye", 'todo': 'add'})
-        if "hi" in response.content:
+        u = User.objects.create_user('super', '', 'super')
+        u.save()
+        c.login(username='super', password='super')
+        c.post("/forum/", {'text': "hi", 'todo': 'add'})
+        response = c.post("/forum/", {'text': "goodbye", 'todo': 'add'})
+        if response.context['posts'][0].text == "hi":
             pass
         else:
             self.fail("First post not here")
@@ -63,12 +67,15 @@ class IntegrationTest(TestCase):
             pass
         else:
             self.fail("Second post not here")
-        self.assertEqual(response.context['posts'][0].username, 'AnonymousUser')
-        self.assertEqual(response.context['posts'][1].username, 'AnonymousUser')
+        self.assertEqual(response.context['posts'][0].username, 'super')
+        self.assertEqual(response.context['posts'][1].username, 'super')
 
     def test_remove_one_post(self):
         c = Client()
-        r = c.post("/forum/", {'userid': 1, 'text': "hi", 'todo': 'add'})
+        u = User.objects.create_user('super', '', 'super')
+        u.save()
+        c.login(username='super', password='super')
+        r = c.post("/forum/", {'text': "hi", 'todo': 'add'})
         response = c.post("/forum/", {'todo': 'del', 'del_id': r.context['posts'][0].id})
         if "Nobody has written anything yet!" in response.content:
             pass
@@ -81,8 +88,11 @@ class IntegrationTest(TestCase):
 
     def test_remove_one_post_two(self):
         c = Client()
-        r = c.post("/forum/", {'userid': 1, 'text': "hi", 'todo': 'add'})
-        c.post("/forum/", {'userid': 2, 'text': "goodbye", 'todo': 'add'})
+        u = User.objects.create_user('super', '', 'super')
+        u.save()
+        c.login(username='super', password='super')
+        r = c.post("/forum/", {'text': "hi", 'todo': 'add'})
+        c.post("/forum/", {'text': "goodbye", 'todo': 'add'})
         response = c.post("/forum/", {'todo': 'del', 'del_id': r.context['posts'][0].id})
         if "goodbye" in response.content:
             pass
