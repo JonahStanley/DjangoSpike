@@ -66,7 +66,8 @@ def edit_profile(request):
             authenticated = False
         elif username == request.user.username:
             newuser = User.objects.get(username=username)
-            newuser.set_password(request.POST.get('password'))
+            if request.POST.get('password'):
+                newuser.set_password(request.POST.get('password'))
             newuser.first_name = request.POST.get('firstname')
             newuser.last_name = request.POST.get('lastname')
             newuser.email = request.POST.get('email')
@@ -78,14 +79,16 @@ def edit_profile(request):
             else:
                 newuser = User.objects.get(username=request.user.username)
                 newuser.username = request.POST.get('username')
-                newuser.set_password(request.POST.get('password'))
+                if request.POST.get('password'):
+                    newuser.set_password(request.POST.get('password'))
                 newuser.first_name = request.POST.get('firstname')
                 newuser.last_name = request.POST.get('lastname')
                 newuser.email = request.POST.get('email')
                 newuser.save()
-                user = auth.authenticate(username=request.POST.get('username'), password=request.POST.get('password'))
-                if user is None and not user.is_active:
-                    raise WEIRDERROR
+                if not request.POST.get('password'):
+                    user = auth.authenticate(username=request.POST.get('username'), password=request.POST.get('oldpassword'))
+                else:
+                    user = auth.authenticate(username=request.POST.get('username'), password=request.POST.get('password'))
                 auth.login(request, user)
                 changePosts(curUser, username)
                 edited = True
