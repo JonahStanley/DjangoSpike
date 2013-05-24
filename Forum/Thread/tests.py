@@ -19,7 +19,7 @@ class ModelTest(TestCase):
     def test_post_length(self):
         #from pdb import set_trace; set_trace()
         try:
-            Post.objects.create(username=1, text=str(range(1,500)))
+            Post.objects.create(username=1, text=str(range(1, 500)))
         except ValueError:
             pass
         else:
@@ -31,7 +31,7 @@ class IntegrationTest(TestCase):
         c = Client()
 
         #register new user and log in
-        c.post('/register/',{'username':'test','password':'test'})
+        c.post('/register/', {'username': 'test', 'password': 'test'})
         c.login(username='test', password='test')
         response = c.get("/forum/")
 
@@ -46,9 +46,8 @@ class IntegrationTest(TestCase):
 
     def test_one_post(self):
         c = Client()
-        
         #register new user and log in
-        c.post('/register/',{'username':'test','password':'test'})
+        c.post('/register/', {'username': 'test', 'password': 'test'})
         c.login(username='test', password='test')
         response = c.get("/forum/")
 
@@ -62,7 +61,6 @@ class IntegrationTest(TestCase):
         else:
             self.fail("NOT Posted")
         self.assertEqual(response.context['posts'][0].username, 'test')
-
 
     def test_two_posts(self):
         c = Client()
@@ -114,4 +112,3 @@ class IntegrationTest(TestCase):
             pass
         else:
             self.fail("First post is here")
-
