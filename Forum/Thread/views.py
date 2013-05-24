@@ -28,14 +28,19 @@ def login(request, in_or_out):
 
 
 def register(request):
+    duplicate = False
     if request.POST:
-        user = User.objects.create_user(username=request.POST.get('username'), password=request.POST.get('password'), email=request.POST.get('email'))
-        user.firstname = request.POST.get('first_name')
-        user.lastname = request.POST.get('last_name'),
-        user.save()
-        return HttpResponseRedirect("/login/?reg=1")
+        username = request.POST.get('username')
+        if User.objects.filter(username=username):
+            duplicate = True
+        else:
+            user = User.objects.create_user(username=username, password=request.POST.get('password'), email=request.POST.get('email'))
+            user.firstname = request.POST.get('first_name')
+            user.lastname = request.POST.get('last_name'),
+            user.save()
+            return HttpResponseRedirect("/login/?reg=1")
     form = register_form()
-    return render_to_response('register.html', {'form': form}, context_instance=RequestContext(request))
+    return render_to_response('register.html', {'form': form, 'duplicate': duplicate}, context_instance=RequestContext(request))
 
 
 @login_required
@@ -45,12 +50,14 @@ def edit_profile(request):
 
 def thread(request):
     if request.POST:
-        if request.POST['todo'] == 'add':
-            Post.objects.create(username=request.user.username, text=request.POST['text'])
-        elif request.POST['todo'] == 'del':
-            id_to_delete = request.POST['del_id']
-            post_to_delete = Post.objects.get(id=id_to_delete)
-            post_to_delete.delete()
+        if not request.user.is_anonymous():
+            if request.POST['todo'] == 'add':
+                Post.objects.create(username=request.user.username, text=request.POST['text'])
+            elif request.POST['todo'] == 'del':
+                id_to_delete = request.POST['del_id']
+                post_to_delete = Post.objects.get(id=id_to_delete)
+                if request.user.username == post_to_delete.username:
+                    post_to_delete.delete()
     posts = Post.objects.order_by('time')
     form = submit_post()
     return render_to_response('thread.html', {'posts': posts, 'form': form, 'user': request.user, 'anon': request.user.is_anonymous()}, context_instance=RequestContext(request))

@@ -2,6 +2,9 @@
 <html lang="en">
 <head><title>Register</title>
     <body>
+        {% if duplicate %}
+        <p><b>That username already exists</b></p>
+        {% endif %}
         <form name="register" action="/register/" method="post">
             {% csrf_token %}
             {{ form.as_p }}
