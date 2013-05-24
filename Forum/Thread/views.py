@@ -104,23 +104,24 @@ def thread(request):
 
 
 def edit_post(request):
+    D = {}
     if request.POST:
         if not request.user.is_anonymous():
             #get id of post to edit
             edit_id = request.POST.get('edit_id', '')
             new_text = request.POST.get('new_text', '')
 
+            #make sure post exists
             try:
                 post = Post.objects.get(id=edit_id)
+                #check that user owns this post, if so update
             except:
-                raise IndexError("That post is non existant")
-
-            #check that user owns this post, if so update
-            if request.user.username == post.username:
-                post.text = new_text
-                post.save()
-
-    return HttpResponseRedirect("/forum/")
+                D = {'error': 'post nonexistant'}
+            else:
+                if request.user.username == post.username:
+                    post.text = new_text
+                    post.save()
+    return HttpResponseRedirect("/forum/", D)
 
 
 def changePosts(oldName, newName):

@@ -312,3 +312,95 @@ class ChangePostTest(TestCase):
             pass
         else:
             self.fail("Username not updated")
+
+
+class EditPostTest(TestCase):
+    def test_edit_works(self):
+        """basic test of the edit functionality"""
+
+        c = Client()
+
+        #create new user and log in
+        uname = 'test'
+        pword = 'test'
+        text0 = 'old text'
+        text1 = 'new text'
+        User.objects.create_user(username=uname, password=pword)
+        c.login(username=uname, password=pword)
+
+        #create post for that user
+        post = Post.objects.create(username=uname, text=text0)
+
+        #edit the post and re-fetch it from database
+        c.post("/edit-post/", {"edit_id": post.id, "new_text": text1})
+        post = Post.objects.get(id=post.id)
+
+        #see that edit happened
+        self.assertEqual(post.text, text1)
+
+    def test_edit_anon(self):
+        """test that anonymous users cant edit others' posts"""
+
+        c = Client()
+
+        #create post for attempted edit
+        uname = 'test'
+        text0 = 'old text'
+        text1 = 'new text'
+
+        #create post for that user
+        post = Post.objects.create(username=uname, text=text0)
+
+        #attempt to edit the post and re-fetch it from database
+        c.post("/edit-post/", {"edit_id": post.id, "new_text": text1})
+        post = Post.objects.get(id=post.id)
+
+        #see that edit didn't happen
+        self.assertEqual(post.text, text0)
+
+    def test_edit_other(self):
+        """test that users can't edit each others' posts"""
+
+        c = Client()
+
+        #create post for some user and log in
+        uname0 = 'test'
+        text0 = 'old text'
+        post = Post.objects.create(username=uname0, text=text0)
+
+        #create new user and log in
+        uname1 = 'name1'
+        pword1 = 'pword1'
+        c.login(username=uname1, password=pword1)
+
+        #attempt to edit the post and re-fetch it from database
+        text1 = 'new_text'
+        c.post("/edit-post/", {"edit_id": post.id, "new_text": text1})
+        post = Post.objects.get(id=post.id)
+
+        #assert that edit didn't happen
+        self.assertEqual(post.text, text0)
+
+    def test_non_exist(self):
+        """make sure it does nothing when the post doesn't exist"""
+
+        c = Client()
+
+        #create new user and log in
+        uname = 'test'
+        pword = 'test'
+        text0 = 'old text'
+        text1 = 'new text'
+        User.objects.create_user(username=uname, password=pword)
+        c.login(username=uname, password=pword)
+
+        #create post for that user
+        post = Post.objects.create(username=uname, text=text0)
+
+        #edit the post but wuth wrong id and re-fetch it from database
+        response = c.post("/edit-post/", {"edit_id": post.id + 1, "new_text": text1})
+        post = Post.objects.get(id=post.id)
+
+        #assert that edit didn't happen and that error was added to post data
+        self.assertEqual(post.text, text0)
+        self.assertEqual(response.content,'error')
