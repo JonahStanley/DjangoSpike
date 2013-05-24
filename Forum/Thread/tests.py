@@ -30,7 +30,7 @@ class IntegrationTest(TestCase):
     def test_empty_forum(self):
         c = Client()
 
-        #register new user and log in
+        #create new user and log in
         User.objects.create_user(username='test', password='test')
         c.login(username='test', password='test')
 
@@ -48,7 +48,7 @@ class IntegrationTest(TestCase):
     def test_one_post(self):
         c = Client()
 
-        #register new user and log in
+        #create new user and log in
         User.objects.create_user(username='test', password='test')
         c.login(username='test', password='test')
 
@@ -139,6 +139,26 @@ class IntegrationTest(TestCase):
             pass
         else:
             self.fail("First post is here")
+
+
+class MalUserTest(TestCase):
+    def test_delete_other_post(self):
+        """Tests if users can delete other users' posts"""
+        c = Client()
+
+        #create new user and log in
+        User.objects.create_user(username='test', password='test')
+        c.login(username='test', password='test')
+
+        #create post in database with different username
+        p = Post.objects.create(username='other', text='lols')
+
+        #try to delete post
+        c.post('/forum/', {'todo': 'del', 'del_id': p.id})
+
+        #test that post is still there
+        if not Post.objects.filter(username='other'):
+            self.fail('deleted other post')
 
 
 class LoginPageTest(TestCase):
