@@ -67,11 +67,22 @@ class IntegrationTest(TestCase):
         c = Client()
 
         #register new user and log in
-        c.post('/register/', {'username': 'test', 'password': 'test'})
+        r = c.post('/register/', {'username': 'test', 'password': 'test'})
         if c.login(username='test', password='test'):
             pass
         else:
             self.fail("Didn't Create User")
+        self.assertRedirects(r, '/login/?reg=1', status_code=302)
+
+    def test_duplicate_register(self):
+        c = Client()
+        u = User.objects.create_user('super', '', 'super')
+        u.save()
+        r = c.post('/register/', {'username': 'super', 'password': 'super'})
+        if "That username already exists" in r.content:
+            pass
+        else:
+            self.fail("DUPLICATES")
 
     def test_anonymous_user(self):
         c = Client()
