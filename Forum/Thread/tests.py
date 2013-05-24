@@ -267,6 +267,23 @@ class EditProfileTest(TestCase):
         r = c.get("/edit-profile/")
         self.assertEqual(r.templates[0].name, 'edit-profile.html')
 
+    def test_username_update_SUPER(self):
+        c = Client()
+        User.objects.create_user(username='test', password='test')
+        c.login(username='test', password='test')
+        for i in range(0, 10):
+            r = c.post("/edit-profile/", {'username': "test2", 'oldpassword': 'test', 'password': 'test', 'firstname': 'Jonah', 'lastname': '', 'email': ''})
+            c.logout()
+            c.login(username='test2', password='test')
+            r = c.get("/edit-profile/")
+            self.assertEqual(r.templates[0].name, 'edit-profile.html')
+
+            r = c.post("/edit-profile/", {'username': "test", 'oldpassword': 'test', 'password': 'test', 'firstname': 'Jonah', 'lastname': '', 'email': ''})
+            c.logout()
+            c.login(username='test', password='test')
+            r = c.get("/edit-profile/")
+            self.assertEqual(r.templates[0].name, 'edit-profile.html')
+
     def test_username_dup_update(self):
         c = Client()
         User.objects.create_user(username='test', password='test')
