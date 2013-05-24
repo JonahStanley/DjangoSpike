@@ -194,3 +194,104 @@ class LoginPageTest(TestCase):
             pass
         else:
             self.fail("not logged out")
+
+
+class EditProfileTest(TestCase):
+    def test_field_fill(self):
+        c = Client()
+        User.objects.create_user(username='test', password='test')
+        c.login(username='test', password='test')
+        r = c.get("/edit-profile/")
+        if "test" in r.content:
+            pass
+        else:
+            self.fail("Did not Populate")
+
+    def test_password_needed(self):
+        c = Client()
+        User.objects.create_user(username='test', password='test')
+        c.login(username='test', password='test')
+        r = c.post("/edit-profile/", {'username': "test", 'oldpassword': '', 'password': '', 'firstname': '', 'lastname': '', 'email': ''})
+        if "PASSWORDS DID NOT MATCH" in r.content:
+            pass
+        else:
+            self.fail("Password wasn't needed")
+
+    def test_password_correctness(self):
+        c = Client()
+        User.objects.create_user(username='test', password='test')
+        c.login(username='test', password='test')
+        r = c.post("/edit-profile/", {'username': "test", 'oldpassword': 'abcd', 'password': '', 'firstname': '', 'lastname': '', 'email': ''})
+        if "PASSWORDS DID NOT MATCH" in r.content:
+            pass
+        else:
+            self.fail("Password wasn't correct")
+
+    def test_password_correctness2(self):
+        c = Client()
+        User.objects.create_user(username='test', password='test')
+        c.login(username='test', password='test')
+        r = c.post("/edit-profile/", {'username': "test", 'oldpassword': 'test', 'password': 'abcd', 'firstname': '', 'lastname': '', 'email': ''})
+        if "PROFILE CHANGED" in r.content:
+            pass
+        else:
+            self.fail("Password wasn't correct")
+
+    def test_update(self):
+        c = Client()
+        User.objects.create_user(username='test', password='test')
+        c.login(username='test', password='test')
+        r = c.post("/edit-profile/", {'username': "test", 'oldpassword': 'test', 'password': 'test', 'firstname': 'Jonah', 'lastname': '', 'email': ''})
+        if "Jonah" in r.content:
+            pass
+        else:
+            self.fail("Did not Change")
+
+    def test_pass_update(self):
+        c = Client()
+        User.objects.create_user(username='test', password='test')
+        c.login(username='test', password='test')
+        c.post("/edit-profile/", {'username': "test", 'oldpassword': 'test', 'password': 'test2', 'firstname': 'Jonah', 'lastname': '', 'email': ''})
+        c.logout()
+        c.login(username='test', password='test2')
+        r = c.get("/edit-profile/")
+        self.assertEqual(r.templates[0].name, 'edit-profile.html')
+
+    def test_username_update(self):
+        c = Client()
+        User.objects.create_user(username='test', password='test')
+        c.login(username='test', password='test')
+        r = c.post("/edit-profile/", {'username': "test2", 'oldpassword': 'test', 'password': 'test', 'firstname': 'Jonah', 'lastname': '', 'email': ''})
+        c.logout()
+        c.login(username='test2', password='test')
+        r = c.get("/edit-profile/")
+        self.assertEqual(r.templates[0].name, 'edit-profile.html')
+
+    def test_username_dup_update(self):
+        c = Client()
+        User.objects.create_user(username='test', password='test')
+        User.objects.create_user(username='test2', password='test')
+        c.login(username='test', password='test')
+        r = c.post("/edit-profile/", {'username': "test2", 'oldpassword': 'test', 'password': 'test', 'firstname': 'Jonah', 'lastname': '', 'email': ''})
+        if "That username already exists" in r.content:
+            pass
+        else:
+            self.fail("Duplicate allowed")
+        c.logout()
+        c.login(username='test', password='test')
+        r = c.get("/edit-profile/")
+        self.assertEqual(r.templates[0].name, 'edit-profile.html')
+
+
+class ChangePostTest(TestCase):
+    def test_1(self):
+        c = Client()
+        User.objects.create_user(username='test', password='test')
+        c.login(username='test', password='test')
+        c.post("/forum/", {'username': 'test', 'text': "hi", 'todo': 'add'})
+        c.post("/edit-profile/", {'username': "test2", 'oldpassword': 'test', 'password': 'test', 'firstname': 'Jonah', 'lastname': '', 'email': ''})
+        r = c.get("/forum")
+        if "test2" in r.content:
+            pass
+        else:
+            self.fail("Username not updated")
