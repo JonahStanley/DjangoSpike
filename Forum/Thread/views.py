@@ -15,6 +15,7 @@ def login(request, in_or_out):
     if ignore:
         out = False
     reg = request.GET.get('reg', False)
+    next = request.GET.get(u'next', '/forum/')
     valid = True
     if request.POST and not out and not ignore:
         username = request.POST.get('username', '')
@@ -22,12 +23,12 @@ def login(request, in_or_out):
         user = auth.authenticate(username=username, password=password)
         if user is not None and user.is_active:
             auth.login(request, user)
-            return HttpResponseRedirect("/forum/")
+            return HttpResponseRedirect(next)
         else:
             valid = False
     if "out" in in_or_out and not ignore:
             auth.logout(request)
-    return render_to_response('login.html', {'in_or_out': out, 'reg': reg, 'valid': valid}, context_instance=RequestContext(request))
+    return render_to_response('login.html', {'in_or_out': out, 'reg': reg, 'valid': valid, 'next': next}, context_instance=RequestContext(request))
 
 
 def register(request):
@@ -54,7 +55,12 @@ def edit_profile(request):
     curUser = request.user.username
     if request.POST:
         username = request.POST.get('username')
-        if request.POST.get('oldpassword') == '':
+        if request.POST.get('delete') == 'delete':
+            olduser = User.objects.get(username=request.user.username)
+            auth.logout(request)
+            olduser.delete()
+            return HttpResponseRedirect("/login/")
+        elif request.POST.get('oldpassword') == '':
             authenticated = False
         elif auth.authenticate(username=curUser, password=request.POST.get('oldpassword')) is None:
             authenticated = False

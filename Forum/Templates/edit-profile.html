@@ -28,5 +28,10 @@
             <input type="text" name="email" value="{{user.email}}" id="email">
             <input type="submit" value="edit">
         </form>
+        <form name="Delete Profile" action="/edit-profile/" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="delete" value="delete">
+            <input type="submit" value="Delete Account">
+        </form>
     </body>
 </html>

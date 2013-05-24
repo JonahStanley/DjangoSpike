@@ -195,6 +195,12 @@ class LoginPageTest(TestCase):
         else:
             self.fail("not logged out")
 
+    def test_login_redirection(self):
+        c = Client()
+        User.objects.create_user(username='test', password='test')
+        r = c.post("/login/?next=/edit-profile", {'username': 'test', 'password': 'test'})
+        self.assertRedirects(r, '/edit-profile', status_code=302)
+
 
 class EditProfileTest(TestCase):
     def test_field_fill(self):
@@ -271,7 +277,7 @@ class EditProfileTest(TestCase):
         c = Client()
         User.objects.create_user(username='test', password='test')
         c.login(username='test', password='test')
-        for i in range(0, 10):
+        for i in range(0, 5):
             r = c.post("/edit-profile/", {'username': "test2", 'oldpassword': 'test', 'password': 'test', 'firstname': 'Jonah', 'lastname': '', 'email': ''})
             c.logout()
             c.login(username='test2', password='test')
@@ -298,6 +304,17 @@ class EditProfileTest(TestCase):
         c.login(username='test', password='test')
         r = c.get("/edit-profile/")
         self.assertEqual(r.templates[0].name, 'edit-profile.html')
+
+    def test_user_deletion(self):
+        c = Client()
+        User.objects.create_user(username='test', password='test')
+        c.login(username='test', password='test')
+        r = c.post('/edit-profile', {'delete': 'delete'})
+        self.assertRedirects(r, '/login/', status_code=302)
+        if not (User.objects.filter(username='test')):
+            pass
+        else:
+            self.fail("User was not deleted")
 
 
 class ChangePostTest(TestCase):

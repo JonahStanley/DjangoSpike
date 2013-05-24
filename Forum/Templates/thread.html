@@ -49,10 +49,13 @@ function cancel(){
             {% else %}
             <input type="submit" value="logout">
             <input type="hidden" name="todo" value = "logout">
-            <button type="button" href="/edit-profile/"><a href="/edit-profile">Edit Profile</a></button>
             {% endif %}
         </form>
-
+        {% if not user.is_anonymous %}
+        <a href="/edit-profile">
+                <button>Edit Profile</button>
+        </a>
+        {% endif %}
         {% for p in posts %}
             <b>{{p.username}}</b> wrote at <b>{{p.time}}</b>:
             <p id={{p.id}}>{{p.text}}</p>
