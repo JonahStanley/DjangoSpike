@@ -58,8 +58,8 @@ def edit_profile(request):
         elif username == request.user.username:
             newuser = User.objects.get(username=username)
             newuser.set_password(request.POST.get('password'))
-            newuser.firstname = request.POST.get('firstname')
-            newuser.lastname = request.POST.get('lastname')
+            newuser.first_name = request.POST.get('firstname')
+            newuser.last_name = request.POST.get('lastname')
             newuser.email = request.POST.get('email')
             newuser.save()
             edited = True
@@ -70,8 +70,8 @@ def edit_profile(request):
                 newuser = User.objects.get(username=request.user.username)
                 newuser.username = request.POST.get('username')
                 newuser.set_password(request.POST.get('password'))
-                newuser.firstname = request.POST.get('firstname')
-                newuser.lastname = request.POST.get('lastname')
+                newuser.first_name = request.POST.get('firstname')
+                newuser.last_name = request.POST.get('lastname')
                 newuser.email = request.POST.get('email')
                 newuser.save()
                 user = auth.authenticate(username=request.POST.get('username'), password=request.POST.get('password'))
@@ -121,10 +121,7 @@ def edit_post(request):
 
 
 def changePosts(oldName, newName):
-    print oldName
-    print newName
     allPosts = Post.objects.filter(username=oldName)
     for post in allPosts:
-        print post.text
         post.username = newName
         post.save()
