@@ -8,6 +8,7 @@ from django.test import TestCase
 from Thread.models import Post
 from django.test.client import Client
 from django.contrib.auth.models import User
+from django.http import HttpResponsePermanentRedirect
 
 
 class ModelTest(TestCase):
@@ -140,3 +141,29 @@ class IntegrationTest(TestCase):
             pass
         else:
             self.fail("First post is here")
+
+
+class LoginPageTest(TestCase):
+    def test_login_fail(self):
+        c = Client()
+        r = c.post("/login/", {'username': 'super', 'password': 'super'})
+        self.assertEqual(r.templates[0].name, 'login.html')
+        if "INVALID USERNAME OR PASSWORD" in r.content:
+            pass
+        else:
+            self.fail("Not invalid")
+
+    def test_login_works(self):
+        c = Client()
+        u = User.objects.create_user('super', '', 'super')
+        u.save()
+        r = c.post("/login/", {'username': 'super', 'password': 'super'})
+        self.assertRedirects(r, '/forum/', status_code=302)
+
+    def test_logout_works(self):
+        c = Client()
+        r = c.get("/logout/")
+        if "logged out successfully" in r.content:
+            pass
+        else:
+            self.fail("not logged out")
