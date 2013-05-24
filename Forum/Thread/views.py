@@ -45,7 +45,43 @@ def register(request):
 
 @login_required
 def edit_profile(request):
-    return HttpResponse("TESTING3")
+    duplicate = False
+    edited = False
+    authenticated = True
+    curUser = request.user.username
+    if request.POST:
+        username = request.POST.get('username')
+        if request.POST.get('oldpassword') == '':
+            authenticated = False
+        elif auth.authenticate(username=curUser, password=request.POST.get('oldpassword')) is None:
+            authenticated = False
+        elif username == request.user.username:
+            newuser = User.objects.get(username=username)
+            newuser.set_password(request.POST.get('password'))
+            newuser.firstname = request.POST.get('firstname')
+            newuser.lastname = request.POST.get('lastname')
+            newuser.email = request.POST.get('email')
+            newuser.save()
+            edited = True
+        else:
+            if User.objects.filter(username=username):
+                duplicate = True
+            else:
+                newuser = User.objects.get(username=request.user.username)
+                newuser.username = request.POST.get('username')
+                newuser.set_password(request.POST.get('password'))
+                newuser.firstname = request.POST.get('firstname')
+                newuser.lastname = request.POST.get('lastname')
+                newuser.email = request.POST.get('email')
+                newuser.save()
+                user = auth.authenticate(username=request.POST.get('username'), password=request.POST.get('password'))
+                if user is None and not user.is_active:
+                    raise WEIRDERROR
+                auth.login(request, user)
+                changePosts(curUser, username)
+                edited = True
+    form = register_form()
+    return render_to_response('edit-profile.html', {'form': form, 'user': User.objects.get(username=request.user.username), 'duplicate': duplicate, 'edited': edited, 'authenticated': authenticated}, context_instance=RequestContext(request))
 
 
 def thread(request):
@@ -55,9 +91,10 @@ def thread(request):
                 Post.objects.create(username=request.user.username, text=request.POST['text'])
             elif request.POST['todo'] == 'del':
                 id_to_delete = request.POST['del_id']
-                post_to_delete = Post.objects.get(id=id_to_delete)
-                if request.user.username == post_to_delete.username:
-                    post_to_delete.delete()
+                if Post.objects.filter(id=id_to_delete):
+                    post_to_delete = Post.objects.filter(id=id_to_delete)[0]
+                    if request.user.username == post_to_delete.username:
+                        post_to_delete.delete()
     posts = Post.objects.order_by('time')
     form = submit_post()
     return render_to_response('thread.html', {'posts': posts, 'form': form, 'user': request.user, 'anon': request.user.is_anonymous()}, context_instance=RequestContext(request))
@@ -81,3 +118,13 @@ def edit_post(request):
                 post.save()
 
     return HttpResponseRedirect("/forum/")
+
+
+def changePosts(oldName, newName):
+    print oldName
+    print newName
+    allPosts = Post.objects.filter(username=oldName)
+    for post in allPosts:
+        print post.text
+        post.username = newName
+        post.save()
