@@ -521,4 +521,45 @@ class SeleniumTests(LiveServerTestCase):
         password_input = self.selenium.find_element_by_name("password")
         password_input.send_keys('test')
         self.selenium.find_element_by_xpath('//input[@value="login"]').click()
-        self.selenium.implicitly_wait(1000)
+        self.selenium.implicitly_wait(10)
+
+    def test_post(self):
+        #log in
+        self.selenium.get('%s%s' % (self.live_server_url, '/login/'))
+        username_input = self.selenium.find_element_by_name("username")
+        username_input.send_keys('test')
+        password_input = self.selenium.find_element_by_name("password")
+        password_input.send_keys('test')
+        self.selenium.find_element_by_xpath('//input[@value="login"]').click()
+
+        #go to forum and make post and then delete post
+        self.selenium.get('%s%s' % (self.live_server_url, '/forum/'))
+        text_input = self.selenium.find_element_by_name("text")
+        text_input.send_keys('test text!')
+        post_button = self.selenium.find_element_by_name("post_button")
+        post_button.click()
+        delete_button = self.selenium.find_element_by_name("delete_button")
+        delete_button.click()
+
+    def test_edit_post(self):
+        self.selenium.implicitly_wait(10)
+
+        #login as super
+        self.selenium.get('%s%s' % (self.live_server_url, '/login/'))
+        username_input = self.selenium.find_element_by_name("username")
+        username_input.send_keys('super')
+        password_input = self.selenium.find_element_by_name("password")
+        password_input.send_keys('super')
+        self.selenium.find_element_by_xpath('//input[@value="login"]').click()
+
+        # go to forum and find post and edit post
+        self.selenium.get('%s%s' % (self.live_server_url, '/forum/'))
+        edit_button = self.selenium.find_element_by_xpath('//button[text() = "Edit"]')
+        edit_button.click()
+        text_area = self.selenium.find_element_by_name("new_text")
+        text_area.send_keys('anyone lived in a pretty how town')
+        confirm_button = self.selenium.find_element_by_xpath('//input[@value="Confirm"]')
+        confirm_button.click()
+
+        # confirm edit happened
+        self.selenium.find_element_by_xpath('//p[contains(text(), "in a pretty")]')

@@ -70,7 +70,7 @@ function cancel(){
                 {% csrf_token %}
                 <input type="hidden" name="del_id" value={{p.id}} id="item{{p.id}}">
                 <input type="hidden" name="todo" value="del" id="todo{{p.id}}">
-                <input type="submit" value="delete" id="submit{{p.id}}">
+                <input type="submit" name="delete_button" value="delete" id="submit{{p.id}}">
                 <button type="button" onclick="edit({{p.id}})" id="script_button{{p.id}}">Edit</button>
             </form>
             {% endifequal %}
@@ -83,7 +83,7 @@ function cancel(){
             {% csrf_token %}
             {{ form.as_p }}
             <input type="hidden" name="todo" value="add">
-            <input type="submit" value="post">
+            <input type="submit" name="post_button" value="post">
         </form><br>
         {% endif %}
     </body>
