@@ -4,13 +4,13 @@
     <body>
         <p><b>PLEASE NOTE THAT YOU MUST FILL OUT PASSWORD</b></p>
         {% if duplicate %}
-        <p><b>That username already exists</b></p>
+        <p id='duplicate'><b>That username already exists</b></p>
         {% endif %}
         {% if edited %}
-        <p><b>PROFILE CHANGED</b></p>
+        <p id='success'><b>PROFILE CHANGED</b></p>
         {% endif %}
         {% if not authenticated %}
-        <p><b>PASSWORDS DID NOT MATCH</b></p>
+        <p id='no_match'><b>PASSWORDS DID NOT MATCH</b></p>
         {% endif %}
         <form name="register" action="/edit-profile/" method="post">
             {% csrf_token %}

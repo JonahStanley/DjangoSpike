@@ -8,11 +8,11 @@
   {% endif %}
 
   {% if reg %}
-  <p><b>REGISTERED</b><p>
+  <p id='register'><b>REGISTERED</b><p>
   {% endif %}
 
   {% if not valid %}
-  <p><b>INVALID USERNAME OR PASSWORD</b><p>
+  <p id='invalid'><b>INVALID USERNAME OR PASSWORD</b><p>
   {% endif %}
 
   <form action="/login/?next={{next}}" method="post">

@@ -466,6 +466,7 @@ class SeleniumTests(LiveServerTestCase):
         password_input = self.selenium.find_element_by_name("password")
         password_input.send_keys('test')
         self.selenium.find_element_by_xpath('//input[@value="login"]').click()
+        self.selenium.find_element_by_name("post_button")
 
     def test_false_login(self):
         self.selenium.get('%s%s' % (self.live_server_url, '/login/'))
@@ -474,7 +475,7 @@ class SeleniumTests(LiveServerTestCase):
         password_input = self.selenium.find_element_by_name("password")
         password_input.send_keys('test')
         self.selenium.find_element_by_xpath('//input[@value="login"]').click()
-        self.selenium.find_element_by_xpath('//input[@value="login"]')
+        self.selenium.find_element_by_id('invalid')
 
     def test_register(self):
         self.selenium.get('%s%s' % (self.live_server_url, '/register/'))
@@ -487,6 +488,7 @@ class SeleniumTests(LiveServerTestCase):
         username_input.send_keys('test2')
         password_input = self.selenium.find_element_by_name("password")
         password_input.send_keys('test2')
+        self.selenium.find_element_by_id('register')
         self.selenium.find_element_by_xpath('//input[@value="login"]').click()
 
     def test_false_register(self):
@@ -501,6 +503,7 @@ class SeleniumTests(LiveServerTestCase):
         password_input = self.selenium.find_element_by_name("password")
         password_input.send_keys('test2')
         self.selenium.find_element_by_xpath('//input[@value="register"]').click()
+        self.selenium.find_element_by_id('register')
 
     def test_edit_page(self):
         self.selenium.get('%s%s' % (self.live_server_url, '/login/'))
